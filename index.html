@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trello-like Task Board</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-800 font-sans leading-normal tracking-normal">
+
+  <div class="container mx-auto p-6">
+    <div class="flex justify-between mb-4">
+      <button id="add-column-btn" class="bg-blue-500 text-white px-4 py-2 rounded">Add Column +</button>
+      <button id="add-task-btn" class="bg-blue-500 text-white px-4 py-2 rounded">Add Task +</button>
+    </div>
+
+    <!-- Columns Container -->
+    <div id="columns-container" class="flex space-x-4 overflow-x-auto p-4">
+      <!-- Dynamic Columns Will Load Here -->
+    </div>
+  </div>
+<!-- Task Modal -->
+<div id="task-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-gray-800 rounded-lg p-6 shadow-lg w-96">
+      <h2 class="text-xl text-white font-bold mb-4">Add New Task</h2>
+      <label class="block text-white mb-1" for="task-title">Title</label>
+      <input type="text" id="task-title" class="w-full p-2 mb-4 rounded border border-gray-600 bg-gray-700 text-white" placeholder="Enter task title" />
+  
+      <label class="block text-white mb-1" for="task-description">Description</label>
+      <textarea id="task-description" class="w-full p-2 mb-4 rounded border border-gray-600 bg-gray-700 text-white" placeholder="Enter task description"></textarea>
+  
+      <label class="block text-white mb-1" for="task-column">Status</label>
+      <select id="task-column" class="w-full p-2 mb-4 rounded border border-gray-600 bg-gray-700 text-white">
+        <option value="">Select a column</option>
+        <!-- Options will be dynamically populated -->
+      </select>
+  
+      <label class="block text-white mb-1" for="task-due-date">Due Date</label>
+      <input type="date" id="task-due-date" class="w-full p-2 mb-4 rounded border border-gray-600 bg-gray-700 text-white" />
+  
+      <label class="block text-white mb-1" for="task-priority">Priority</label>
+      <select id="task-priority" class="w-full p-2 mb-4 rounded border border-gray-600 bg-gray-700 text-white">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+  
+      <div class="flex justify-between">
+        <button id="save-task" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500">Save Task</button>
+        <button id="close-modal" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Card Modal -->
+<div id="card-modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden justify-center items-center">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+      <h2 class="text-lg font-bold mb-4">Add New Card</h2>
+      <label class="block mb-2">Card Title</label>
+      <input type="text" id="card-title" class="border rounded p-2 w-full mb-4" placeholder="Enter card title" required />
+  
+      <div class="flex justify-between">
+        <button id="save-card" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+        <button id="close-card-modal" class="bg-gray-300 text-gray-700 px-4 py-2 rounded">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+
+<!-- Target Column Selection Modal -->
+<div id="target-column-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-800 bg-opacity-50">
+    <div class="bg-white rounded-lg shadow-lg p-4 w-80">
+      <h2 class="text-lg font-bold mb-4">Select Target Column</h2>
+      <ul id="column-list" class="mb-4"></ul>
+      <button id="close-modal-btn" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+    </div>
+  </div>
+  
+  <script type="module" src="js/main.js"></script>
+
+</body>
+</html>
