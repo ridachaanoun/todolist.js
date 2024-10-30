@@ -9,7 +9,9 @@ export function showCardModal(columnId) {
 
   // Show the modal
   cardModal.classList.remove('hidden');
+  const menuButton = document.querySelector('.menu-options');
 
+  menuButton.classList.toggle("hidden");
   // Event: Close Modal
   closeCardModalBtn.addEventListener('click', () => {
     cardModal.classList.add('hidden');
