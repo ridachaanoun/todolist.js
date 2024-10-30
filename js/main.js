@@ -1,8 +1,7 @@
-
 import { showCardModal, moveList, moveAllCards, archiveList, archiveAllCards, toggleMenu } from './eventHandlers.js';
-
-loadColumns();
-loadTasks();
+window.allowDrop = allowDrop;
+window.drag = drag;
+window.drop = drop;
 // DOM Elements
 const columnsContainer = document.getElementById('columns-container');
 const addColumnBtn = document.getElementById('add-column-btn');
@@ -33,21 +32,22 @@ function renderColumn(column) {
   columnDiv.classList.add('bg-gray-900', 'p-4', 'rounded-lg', 'shadow-md', 'w-64', 'space-y-4', 'relative');
   columnDiv.dataset.id = column.id;
 
+  columnDiv.addEventListener('drop', drop);
+  columnDiv.addEventListener('dragover', allowDrop);
+
   columnDiv.innerHTML = `
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-white font-bold">${column.name}</h3>
-      <button class="three-dot-menu relative text-white">
-        ⋮
-      </button>
+      <button class="three-dot-menu relative text-white">⋮</button>
       <div class="menu-options hidden absolute top-8 right-0 bg-white shadow-lg rounded p-2 z-10">
-        <button class="add-card" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Add Card</button>
-        <button class="move-list" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Move List</button>
-        <button class="move-all-cards" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Move All Cards</button>
-        <button class="archive-list" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Archive List</button>
-        <button class="archive-all-cards" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Archive All Cards</button>
+        <button class="add-card block w-full text-left px-4 py-2 hover:bg-gray-100">Add Card</button>
+        <button class="move-list block w-full text-left px-4 py-2 hover:bg-gray-100">Move List</button>
+        <button class="move-all-cards block w-full text-left px-4 py-2 hover:bg-gray-100">Move All Cards</button>
+        <button class="archive-list block w-full text-left px-4 py-2 hover:bg-gray-100">Archive List</button>
+        <button class="archive-all-cards block w-full text-left px-4 py-2 hover:bg-gray-100">Archive All Cards</button>
       </div>
     </div>
-    <div data-status="${column.id}" class="task-list space-y-2"></div>
+    <div class="task-list space-y-2"></div>
   `;
 
   columnsContainer.appendChild(columnDiv);
@@ -68,18 +68,19 @@ function renderColumn(column) {
   option.value = column.id;
   option.textContent = column.name;
   taskColumnSelect.appendChild(option);
-
 }
 
 // Render a Task
 function renderTask(task) {
-  const taskContainer = document.querySelector(`[data-status='${task.status}']`);
+  const taskContainer = document.querySelector(`[data-id='${task.status}']`);
   if (!taskContainer) return;
 
   const taskDiv = document.createElement('div');
   taskDiv.classList.add('border', 'p-3', 'rounded-lg', 'bg-gray-700', 'flex', 'justify-between', 'items-center');
   taskDiv.dataset.id = task.id;
-
+  taskDiv.setAttribute('draggable', 'true');
+  // taskDiv.setAttribute('ondragstart', 'drag(event)');
+  taskDiv.addEventListener('dragstart', drag);
   taskDiv.innerHTML = `
     <div>
       <span class="text-white font-bold">${task.title}</span>
@@ -133,6 +134,7 @@ addColumnBtn.addEventListener('click', async () => {
 // Event: Show Modal for Adding Task
 addTaskBtn.addEventListener('click', () => {
   taskModal.classList.remove('hidden');
+
 });
 
 // Event: Close Modal
@@ -168,8 +170,49 @@ saveTaskBtn.addEventListener('click', async () => {
   document.getElementById('task-description').value = ''; // Clear description
   document.getElementById('task-due-date').value = ''; // Clear due date
   document.getElementById('task-priority').value = 'low'; // Reset priority
-
 });
+
+
+// Drag and Drop Functions
+
+function allowDrop(event) {
+  event.preventDefault();
+}
+
+function drag(event) {
+  event.dataTransfer.setData("text", event.target.dataset.id);
+}
+function drop(event) {
+  event.preventDefault();
+  const taskId = event.dataTransfer.getData("text/plain");
+  const taskDiv = document.querySelector(`[data-id='${taskId}']`);
+
+  // Check if the drop target is a valid column with data-status
+
+  const targetColumn = event.target.closest('[data-id]');
+  
+  if (targetColumn && taskDiv) {
+      targetColumn.querySelector('.task-list').appendChild(taskDiv); // Append to the task list within the column
+      const newStatus = targetColumn.getAttribute('data-id');
+      updateTaskStatus(taskId, newStatus);
+  } else {
+      console.log("Drop area not recognized or taskDiv not found.");
+  }
+}
+
+async function updateTaskStatus(taskId, newStatus) {
+  try {
+    await fetch(`http://localhost:3000/tasks/${taskId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus })
+    });
+  } catch (error) {
+    console.error('Error updating task status:', error);
+  }
+}
 
 // Initial Load
 
+loadColumns();
+loadTasks();
