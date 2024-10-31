@@ -19,11 +19,23 @@ async function loadColumns() {
 }
 
 // Fetch and Render Tasks
-async function loadTasks() {
+async function  loadTasks(priority = "") {
   const response = await fetch('http://localhost:3000/tasks');
   const tasks = await response.json();
-  tasks.forEach(renderTask);
+  
+  // Clear existing tasks
+  document.querySelectorAll('.task').forEach(task => task.remove());
+  
+  // Filter tasks by priority if a filter is set
+  const filteredTasks = priority ? tasks.filter(task => task.priority === priority) : tasks;
+  filteredTasks.forEach(renderTask);
 }
+
+// Event Listener for Priority Filter
+document.getElementById('priority-filter').addEventListener('change', (event) => {
+  const selectedPriority = event.target.value;
+  loadTasks(selectedPriority);
+});
 
 // Render a Column
 function renderColumn(column) {
@@ -37,6 +49,7 @@ function renderColumn(column) {
   columnDiv.innerHTML = `
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-white font-bold">${column.name}</h3>
+      <div class="task-counter text-white ">Tasks: <span class="task-count text-white  ">0</span></div>
       <button class="three-dot-menu relative text-white">⋮</button>
       <div class="menu-options hidden absolute top-8 right-0 bg-white shadow-lg rounded p-2 z-10">
         <button class="add-card block w-full text-left px-4 py-2 hover:bg-gray-100">Add Card</button>
@@ -71,7 +84,7 @@ function renderColumn(column) {
 function renderTask(task) {
   const taskContainer = document.querySelector(`[data-id='${task.status}']`);
   if (!taskContainer) return;
-
+  // = 0
   const taskDiv = document.createElement('div');
   taskDiv.classList.add('border', 'p-3', 'rounded-lg', 'bg-gray-700', 'flex', 'justify-between', 'items-center','task');
   taskDiv.dataset.id = task.id;
@@ -113,20 +126,25 @@ async function deleteTask(taskId) {
 }
 
 // Event: Add New Column
-addColumnBtn.addEventListener('click', async () => {
+document.addEventListener('DOMContentLoaded', () => {
+addColumnBtn.addEventListener('click', async (e) => {
+  e.preventDefault();
   const columnName = prompt("Enter column name:");
   if (!columnName) return;
-
+  
   const newColumn = { name: columnName };
   const response = await fetch('http://localhost:3000/columns', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(newColumn)
   });
-
+  
   const savedColumn = await response.json();
   renderColumn(savedColumn);
+
 });
+});
+  
 
 // Event: Show Modal for Adding Task
 addTaskBtn.addEventListener('click', () => {
@@ -215,7 +233,9 @@ async function updateTaskStatus(taskId, newStatus) {
 loadColumns();
 loadTasks();
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded',() => {
+
+
   const searchBar = document.getElementById('search-bar');
   
   searchBar.addEventListener('input', () => {
@@ -235,3 +255,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+

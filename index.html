@@ -10,14 +10,22 @@
 
   <div class="container mx-auto p-6">
     <div class="flex justify-between mb-4">
-      <button id="add-column-btn" class="bg-blue-500 text-white px-4 py-2 rounded">Add Column +</button>
-      <button id="add-task-btn" class="bg-blue-500 text-white px-4 py-2 rounded">Add Task +</button>
+      <button id="add-column-btn" type="button" class="bg-blue-500 text-white px-4 py-2 rounded">Add Column +</button>
+      <button id="add-task-btn" type="button" class="bg-blue-500 text-white px-4 py-2 rounded">Add Task +</button>
     </div>
     
     <!-- Search Bar -->
     <div class="mb-4">
       <input type="text" id="search-bar" class="w-full p-2 rounded border border-gray-600 bg-gray-700 text-white" placeholder="Search tasks by title or keyword..." />
     </div>
+
+    <!-- Priority Filter Dropdown -->
+    <select id="priority-filter" class="p-2 rounded border border-gray-300">
+      <option value="">All Priorities</option>
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+    </select>
 
     <!-- Columns Container -->
     <div id="columns-container" class="flex space-x-4 overflow-x-auto p-4">
