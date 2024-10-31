@@ -41,7 +41,6 @@ function renderColumn(column) {
       <button class="three-dot-menu relative text-white">⋮</button>
       <div class="menu-options hidden absolute top-8 right-0 bg-white shadow-lg rounded p-2 z-10">
         <button class="add-card block w-full text-left px-4 py-2 hover:bg-gray-100">Add Card</button>
-        <button class="move-list block w-full text-left px-4 py-2 hover:bg-gray-100">Move List</button>
         <button class="move-all-cards block w-full text-left px-4 py-2 hover:bg-gray-100">Move All Cards</button>
         <button class="archive-list block w-full text-left px-4 py-2 hover:bg-gray-100">Archive List</button>
         <button class="archive-all-cards block w-full text-left px-4 py-2 hover:bg-gray-100">Archive All Cards</button>
@@ -58,7 +57,6 @@ function renderColumn(column) {
 
   // Attach event listeners for buttons in the menu
   columnDiv.querySelector('.add-card').addEventListener('click', () => showCardModal(column.id));
-  columnDiv.querySelector('.move-list').addEventListener('click', () => moveList(column.id));
   columnDiv.querySelector('.move-all-cards').addEventListener('click', () => moveAllCards(column.id));
   columnDiv.querySelector('.archive-list').addEventListener('click', () => archiveList(column.id));
   columnDiv.querySelector('.archive-all-cards').addEventListener('click', () => archiveAllCards(column.id));

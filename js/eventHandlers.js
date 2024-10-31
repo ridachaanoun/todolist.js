@@ -50,27 +50,6 @@ function clearCardModalInputs() {
   document.getElementById('card-title').value = '';
 }
 
-// Call this function where you want to open the modal
-// Example usage: showCardModal(columnId);
-
-export async function moveList(columnId) {
-  const newColumnId = prompt("Enter the new column ID to move this list to:");
-  if (!newColumnId) return;
-
-  const response = await fetch(`http://localhost:3000/columns/${columnId}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id: newColumnId }), // Assuming you're just updating the column's ID
-  });
-
-  if (response.ok) {
-    alert(`Moved list ${columnId} to column ${newColumnId}`);
-    // Optionally, you might want to refresh the columns view or implement logic to move the list in the UI
-  } else {
-    alert("Failed to move list.");
-  }
-}
-
 export async function moveAllCards(currentColumnId) {
   try {
     // Fetch available columns
@@ -109,7 +88,7 @@ export async function moveAllCards(currentColumnId) {
 }
 
 window.selectColumn = async function(currentColumnId, targetColumnId) {
-  // try {
+
     const response = await fetch(`http://localhost:3000/tasks?status=${currentColumnId}`);
     const cards = await response.json();
 
