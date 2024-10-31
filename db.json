@@ -12,14 +12,14 @@
       "id": "8c12",
       "title": "reda ",
       "description": "reda",
-      "status": "77c1",
+      "status": "5327",
       "dueDate": "2024-10-17",
       "priority": "medium"
     },
     {
       "id": "dd96",
       "title": "redfa",
-      "status": "5327"
+      "status": "daa0"
     },
     {
       "id": "9373",
@@ -34,26 +34,37 @@
     {
       "id": "8531",
       "title": "reda",
-      "status": "77c1"
+      "status": "0fa7"
     },
     {
       "id": "987e",
       "title": "redaaa",
-      "status": "77c1"
+      "status": "0fa7"
     },
     {
       "id": "03ac",
       "title": "e4read",
-      "status": "77c1"
+      "status": "daa0"
+    },
+    {
+      "id": "f61d",
+      "title": "redsa",
+      "description": "hhhh",
+      "status": "0fa7",
+      "dueDate": "2024-11-01",
+      "priority": "low"
+    },
+    {
+      "id": "06d3",
+      "title": "reda3",
+      "description": "reda",
+      "status": "daa0",
+      "dueDate": "",
+      "priority": "medium"
     }
   ],
   "columns": [
     {
-      "id": "77c1",
-      "name": "doing"
-    },
-    {
-
       "id": "0fa7",
       "name": "to do "
     },
@@ -64,7 +75,6 @@
     {
       "id": "daa0",
       "name": "test"
-
     }
   ]
 }

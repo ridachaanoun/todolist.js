@@ -1,7 +1,5 @@
 import { showCardModal, moveAllCards, archiveList, archiveAllCards, toggleMenu } from './eventHandlers.js';
-window.allowDrop = allowDrop;
-window.drag = drag;
-window.drop = drop;
+
 // DOM Elements
 const columnsContainer = document.getElementById('columns-container');
 const addColumnBtn = document.getElementById('add-column-btn');
@@ -17,6 +15,7 @@ async function loadColumns() {
   const response = await fetch('http://localhost:3000/columns');
   const columns = await response.json();
   columns.forEach(renderColumn);
+  
 }
 
 // Fetch and Render Tasks
@@ -74,16 +73,16 @@ function renderTask(task) {
   if (!taskContainer) return;
 
   const taskDiv = document.createElement('div');
-  taskDiv.classList.add('border', 'p-3', 'rounded-lg', 'bg-gray-700', 'flex', 'justify-between', 'items-center');
+  taskDiv.classList.add('border', 'p-3', 'rounded-lg', 'bg-gray-700', 'flex', 'justify-between', 'items-center','task');
   taskDiv.dataset.id = task.id;
   taskDiv.setAttribute('draggable', 'true');
   // taskDiv.setAttribute('ondragstart', 'drag(event)');
   taskDiv.addEventListener('dragstart', drag);
   taskDiv.innerHTML = `
     <div>
-      <span class="text-white font-bold">${task.title}</span>
-      <p class="text-gray-400">Due: ${task.dueDate}</p>
-      <p class="text-gray-400">Priority: ${task.priority}</p>
+      <span class="text-white font-bold task-title">${task.title}</span>
+      <p class="text-gray-400 ">Due: ${task.dueDate}</p>
+      <p class="text-gray-400 task-description">Priority: ${task.priority}</p>
     </div>
     <button type="button" class="bg-red-500 text-white px-2 py-1 rounded delete-btn">Delete</button>
   `;
@@ -151,7 +150,8 @@ saveTaskBtn.addEventListener('click', async () => {
 
   if (!title || !status) return;
 
-  const newTask = { title, description, status, dueDate, priority }; // Include new fields
+  // const newTask = { title, description, status, dueDate, priority };
+  const newTask = { id: generateId(), title, description, status, dueDate, priority }; 
   const response = await fetch('http://localhost:3000/tasks', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -214,3 +214,24 @@ async function updateTaskStatus(taskId, newStatus) {
 
 loadColumns();
 loadTasks();
+
+document.addEventListener('DOMContentLoaded', () => {
+  const searchBar = document.getElementById('search-bar');
+  
+  searchBar.addEventListener('input', () => {
+    const searchQuery = searchBar.value.toLowerCase();
+    const tasks = document.querySelectorAll('.task'); // Assuming tasks have a class 'task'
+  // console.log(tasks);
+    
+    tasks.forEach(task => {
+      const title = task.querySelector('.task-title').innerText.toLowerCase();
+      const description = task.querySelector('.task-description').innerText.toLowerCase();
+      
+      if (title.includes(searchQuery) || description.includes(searchQuery)) {
+        task.style.display = ''; // Show task
+      } else {
+        task.style.display = 'none'; // Hide task
+      }
+    });
+  });
+});
