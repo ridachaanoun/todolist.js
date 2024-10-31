@@ -1,4 +1,4 @@
-import { showCardModal, moveList, moveAllCards, archiveList, archiveAllCards, toggleMenu } from './eventHandlers.js';
+import { showCardModal, moveAllCards, archiveList, archiveAllCards, toggleMenu } from './eventHandlers.js';
 window.allowDrop = allowDrop;
 window.drag = drag;
 window.drop = drop;
