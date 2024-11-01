@@ -30,7 +30,11 @@ async function  loadTasks(priority = "") {
   const filteredTasks = priority ? tasks.filter(task => task.priority === priority) : tasks;
   filteredTasks.forEach(renderTask);
 
-    // Update task counts for each column
+
+  const taskCountElement = document.querySelector(`.task-count`); 
+  taskCountElement.textContent="0"
+  
+  // Update task counts for each column
     const columnIds = [...new Set(filteredTasks.map(task => task.status))]; // Get unique column IDs
     columnIds.forEach(updateTaskCount);
 }
@@ -266,5 +270,6 @@ function updateTaskCount(columnId) {
   const taskCountElement = document.querySelector(`[data-id='${columnId}'] .task-count`);
   if (taskCountElement) {
     taskCountElement.textContent = tasksInColumn.length; // Update the displayed count
+    
   }
 }
