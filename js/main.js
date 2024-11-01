@@ -28,11 +28,7 @@ async function  loadTasks(priority = "") {
   
   // Filter tasks by priority if a filter is set
   const filteredTasks = priority ? tasks.filter(task => task.priority === priority) : tasks;
-  filteredTasks.forEach(renderTask);
-
-
-  const taskCountElement = document.querySelector(`.task-count`); 
-  taskCountElement.textContent="0"
+  filteredTasks.forEach(renderTask);  
   
   // Update task counts for each column
     const columnIds = [...new Set(filteredTasks.map(task => task.status))]; // Get unique column IDs
@@ -101,7 +97,7 @@ function renderTask(task) {
   taskDiv.addEventListener('dragstart', drag);
   taskDiv.innerHTML = `
     <div class="forupdate">
-      <span class="text-white font-bold task-title">${task.title }</span>
+      <span class="text-white font-bold task-title break-all">${task.title }</span>
       <p class="text-gray-400 task-description break-all">${task.description ? task.description: ""}</p>
       <p class="text-gray-400 ">Due: ${task.dueDate ? task.dueDate: ""}</p>
       <p class="text-gray-400 task-description">Priority: ${task.priority ? task.priority: ""}</p>
