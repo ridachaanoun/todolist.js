@@ -48,7 +48,7 @@ document.getElementById('priority-filter').addEventListener('change', (event) =>
 // Render a Column
 function renderColumn(column) {
   const columnDiv = document.createElement('div');
-  columnDiv.classList.add('bg-gray-900', 'p-4', 'rounded-lg', 'shadow-md', 'w-64', 'space-y-4', 'relative');
+  columnDiv.classList.add('bg-gray-900', 'p-4', 'rounded-lg', 'shadow-md', 'w-72', 'space-y-4', 'relative');
   columnDiv.dataset.id = column.id;
 
   columnDiv.addEventListener('drop', drop);
@@ -100,8 +100,9 @@ function renderTask(task) {
   // taskDiv.setAttribute('ondragstart', 'drag(event)');
   taskDiv.addEventListener('dragstart', drag);
   taskDiv.innerHTML = `
-    <div id="forupdate">
-      <span class="text-white font-bold task-title">${task.title}</span>
+    <div class="forupdate">
+      <span class="text-white font-bold task-title">${task.title }</span>
+      <p class="text-gray-400 task-description break-all">${task.description ? task.description: ""}</p>
       <p class="text-gray-400 ">Due: ${task.dueDate ? task.dueDate: ""}</p>
       <p class="text-gray-400 task-description">Priority: ${task.priority ? task.priority: ""}</p>
     </div>
@@ -118,7 +119,7 @@ function renderTask(task) {
   updateTaskCount(task.status); // Update task count after deletion
 
     // Add event listener for updating task when clicked
-    document.getElementById("forupdate").addEventListener('click', () => openUpdateTaskModal(task));
+    taskDiv.querySelector(".forupdate").addEventListener('click', () => openUpdateTaskModal(task));
 }
 
 // Function to delete the task from the backend
