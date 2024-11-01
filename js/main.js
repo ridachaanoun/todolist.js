@@ -92,7 +92,7 @@ function renderColumn(column) {
 function renderTask(task) {
   const taskContainer = document.querySelector(`[data-id='${task.status}']`);
   if (!taskContainer) return;
-  // = 0
+
   const taskDiv = document.createElement('div');
   taskDiv.classList.add('border', 'p-3', 'rounded-lg', 'bg-gray-700', 'flex', 'justify-between', 'items-center','task');
   taskDiv.dataset.id = task.id;
@@ -100,10 +100,10 @@ function renderTask(task) {
   // taskDiv.setAttribute('ondragstart', 'drag(event)');
   taskDiv.addEventListener('dragstart', drag);
   taskDiv.innerHTML = `
-    <div>
+    <div id="forupdate">
       <span class="text-white font-bold task-title">${task.title}</span>
-      <p class="text-gray-400 ">Due: ${task.dueDate}</p>
-      <p class="text-gray-400 task-description">Priority: ${task.priority}</p>
+      <p class="text-gray-400 ">Due: ${task.dueDate ? task.dueDate: ""}</p>
+      <p class="text-gray-400 task-description">Priority: ${task.priority ? task.priority: ""}</p>
     </div>
     <button type="button" class="bg-red-500 text-white px-2 py-1 rounded delete-btn">Delete</button>
   `;
@@ -116,6 +116,9 @@ function renderTask(task) {
     await deleteTask(task.id);
   });
   updateTaskCount(task.status); // Update task count after deletion
+
+    // Add event listener for updating task when clicked
+    document.getElementById("forupdate").addEventListener('click', () => openUpdateTaskModal(task));
 }
 
 // Function to delete the task from the backend
@@ -178,7 +181,7 @@ saveTaskBtn.addEventListener('click', async () => {
   if (!title || !status) return;
 
   // const newTask = { title, description, status, dueDate, priority };
-  const newTask = { id: generateId(), title, description, status, dueDate, priority }; 
+  const newTask = {title, description, status, dueDate, priority }; 
   const response = await fetch('http://localhost:3000/tasks', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -273,3 +276,65 @@ function updateTaskCount(columnId) {
     
   }
 }
+
+function openUpdateTaskModal(task) {
+  const modal = document.getElementById('update-task-modal');
+  const titleInput = modal.querySelector('#update-title');
+  const dueDateInput = modal.querySelector('#update-due-date');
+  const priorityInput = modal.querySelector('#update-priority');
+
+  // Fill in current task details
+  titleInput.value = task.title;
+  dueDateInput.value = task.dueDate;
+  priorityInput.value = task.priority;
+
+  modal.classList.remove('hidden'); // Show the modal
+
+  // Save changes when the user clicks save
+  document.getElementById('save-task-btn').onclick = async () => {
+    // Update task object with new values
+    const updatedTask = {
+      title: titleInput.value,
+      dueDate: dueDateInput.value,
+      priority: priorityInput.value,
+      status: task.status
+    };
+
+    try {
+      // Send the PUT request to update the task on the server
+      const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedTask)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update task');
+      }
+
+      // Update task in the UI
+      task.title = updatedTask.title;
+      task.dueDate = updatedTask.dueDate;
+      task.priority = updatedTask.priority;
+      renderTask(task); 
+
+      // Hide the modal after saving
+      modal.classList.add('hidden');
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred while updating the task.');
+    }
+  };
+}
+
+// Close the modal when clicking the close button or outside the modal content
+document.querySelector('.close-button').onclick = () => {
+  document.getElementById('update-task-modal').classList.add('hidden');
+};
+
+window.onclick = (e) => {
+  const modal = document.getElementById('update-task-modal');
+  if (e.target === modal) {
+    modal.classList.add('hidden');
+  }
+};
