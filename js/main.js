@@ -55,7 +55,7 @@ function renderColumn(column) {
   columnDiv.addEventListener('dragover', allowDrop);
 
   columnDiv.innerHTML = `
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-center ">
       <h3 class="text-white font-bold">${column.name}</h3>
       <div class="task-counter text-white ">Tasks: <span class="task-count text-white  ">0</span></div>
       <button class="three-dot-menu relative text-white">⋮</button>

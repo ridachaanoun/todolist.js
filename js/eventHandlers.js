@@ -9,9 +9,9 @@ export function showCardModal(columnId) {
 
   // Show the modal
   cardModal.classList.remove('hidden');
-  const menuButton = document.querySelector('.menu-options');
+  const menuButton = document.querySelector(`[data-id='${columnId}'] .menu-options`);
 
-  menuButton.classList.toggle("hidden");
+  menuButton.classList.add("hidden");
   // Event: Close Modal
   closeCardModalBtn.addEventListener('click', () => {
     cardModal.classList.add('hidden');
@@ -35,8 +35,6 @@ export function showCardModal(columnId) {
     if (response.ok) {
       const savedCard = await response.json();
       alert(`Card added to column ${columnId}: ${savedCard.title}`);
-      // Optionally render the new card immediately
-      // renderTask(savedCard); // Uncomment if you want to render it immediately
       cardModal.classList.add('hidden');
       clearCardModalInputs();
     } else {
